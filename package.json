@@ -1,0 +1,25 @@
+{
+  "name": "elizabeth",
+  "version": "1.0.0",
+  "description": "[![Generic badge](https://img.shields.io/badge/course%20available%3F-yes-green.svg)](https://shields.io/)",
+  "main": "index.js",
+  "scripts": {
+    "tailwind:watch": "npx @tailwindcss/cli -i ./src/tailwind.css -o ./assets/application.css --watch",
+    "tailwind:build": "npx @tailwindcss/cli -i ./src/tailwind.css -o ./assets/application.css",
+    "shopify:dev": "shopify theme dev",
+    "dev": "concurrently \"npm:tailwind:watch\" \"npm:shopify:dev\"",
+    "build": "npm run tailwind:build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@tailwindcss/cli": "^4.1.17",
+    "tailwindcss": "^4.1.17"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
