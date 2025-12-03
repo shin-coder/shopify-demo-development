@@ -1,0 +1,9 @@
+{
+  "name": "Tempalate 404",
+  "sections": {
+    "tempalate": {
+      "type": "template-404"
+    }
+  },
+  "order": ["tempalate"]
+}
