@@ -2,13 +2,13 @@
 
 Shopifyのカスタムテーマ開発プロジェクト
 
-## 技術スタック
+## 🚀技術スタック
 
 - **[Shopify](https://www.shopify.com/)** - ECプラットフォーム
 - **[Tailwind CSS](https://tailwindcss.com/)** - ユーティリティファーストCSSフレームワーク
 - **[Alpine.js](https://alpinejs.dev/)** - 軽量JavaScriptフレームワーク
 
-## セットアップ
+## ⚙️セットアップ
 
 ### 前提条件
 
@@ -44,7 +44,7 @@ npm run dev
 
 開発用のプレビューURLがターミナルに表示されます。
 
-## 利用可能なコマンド
+## 💻利用可能なコマンド
 
 | コマンド | 説明 |
 |---------|------|
@@ -53,7 +53,7 @@ npm run dev
 | `npm run tailwind:watch` | Tailwind CSSのみをwatchモードで実行 |
 | `npm run shopify:dev` | Shopifyの開発サーバーのみを起動 |
 
-## デプロイ
+## 🔥デプロイ
 
 テーマファイルをShopifyストアにアップロードする:
 
@@ -67,7 +67,7 @@ shopify theme push
 shopify theme push --theme [THEME_ID]
 ```
 
-## 多言語対応（Locales）
+## 🌏多言語対応（Locales）
 
 ### ロケールファイルの設定
 
@@ -131,7 +131,7 @@ locales/
 {{ 'cart.item_count' | t: count: cart.item_count }}
 ```
 
-## テンプレートファイル（JSON）でのページ作成
+## 📁テンプレートファイル（JSON）でのページ作成
 
 Shopify 2.0では、JSONテンプレートを使用してページを構築します。
 
