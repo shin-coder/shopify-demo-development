@@ -1,0 +1,31 @@
+{% comment %}
+  @param product_product - Product object (same as 'product' in template-collection.liquid)
+  Usage: {% render 'product-card', product_product: product %}
+{% endcomment %}
+
+<div class="w-full py-6 px-3 flex">
+  <div class="border border-gray-100 bg-white rounded-lg overflow-hidden shadow-lg h-full w-full flex flex-col">
+    <a href="{{ product_product.url }}" class="block">
+      {% if product_product.featured_image %}
+        <div class="h-80 overflow-hidden">
+          <img
+            src="{{ product_product.featured_image |  image_url: width: 400 }}"
+            width="400"
+            height="400"
+            alt="{{ product_product.featured_image.alt }}"
+            class="w-full h-full object-cover transtion duration-500 ease-in-out hover:scale-105 transform"
+          >
+        </div>
+      {% else %}
+        <div class="h-80 overflow-hidden">
+          {{ 'product-1' | placeholder_svg_tag: 'w-full h-full object-cover bg-gray-100' }}
+        </div>
+      {% endif %}
+    </a>
+    <div class="flex flex-col p-4">
+      <span class="text-sm text-gray-400">{{ product_product.vendor }}</span>
+      <a href="{{ product_product.url }}" class="text-gray-700 uppercase font-medium">{{ product_product.title }}</a>
+      <p class="text-gray-500">{{ product_product.price | money }}</p>
+    </div>
+  </div>
+</div>
