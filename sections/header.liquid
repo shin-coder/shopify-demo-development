@@ -37,6 +37,7 @@
               <!-- SUB MENU -->
               <div
                 x-show="{{ link_handle }}"
+                x-cloak
                 @click.away="{{ link_handle }} = false"
                 class="absolute z-10 -ml-5 mt-5 transform px-2 w-screen max-w-md sm:px-0 lg:ml-0 lg:left-1/2 lg:-translate-x-1/2"
               >
@@ -74,7 +75,7 @@
   </div>
 
   <!-- MOBILE MENU CONTAINER -->
-  <div x-show="mobileMenuOpen" class="absolute z-10 top-0 inset-x-0 p-2 transform origin-top-left md:hidden">
+  <div x-show="mobileMenuOpen" x-cloak class="absolute z-10 top-0 inset-x-0 p-2 transform origin-top-left md:hidden">
     <div class="shadow-lg rounded-lg ring-1 ring-black ring-opacity-5 bg-white w-full">
       <div class="p-5 divide-y-2 divide-gray-50">
         <!-- MOBILE MENU HEADER TITLE PLUS CLOSE BUTTON -->
@@ -104,7 +105,7 @@
                     <div>{{ link.title }}</div>
                     {% render 'icon-dropdown' %}
                   </button>
-                  <div x-show="{{ link_handle }}" class="grid gap-y-7 py-3">
+                  <div x-show="{{ link_handle }}" x-cloak class="grid gap-y-7 py-3">
                     {% for childlink in link.links %}
                       <a
                         href="{{ childlink.url }}"
