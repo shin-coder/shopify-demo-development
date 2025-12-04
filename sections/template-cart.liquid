@@ -1,0 +1,187 @@
+{% if cart.item_count > 0 %}
+  <div class="p-4" x-data="cart()">
+    <div class="max-w-6xl flex flex-col my-10 mx-auto">
+      <div class="flex items-end justify-between my-5">
+        <h1 class="text-3xl">Your cart</h1>
+        <a
+          href="{{ routes.all_products_collection_url }}"
+          class="text-blue-600 hover:text-blue-800 font-medium underline"
+          >Continue Shopping</a
+        >
+      </div>
+    </div>
+    <div class="max-w-6xl flex flex-col my-10 mx-auto">
+      <form action="{{ routes.cart_url }}" method="POST" novalidate>
+        <table class="table-auto divide-y divide-gray-200 my-4 w-full">
+          <thead>
+            <th class="px-6 py-3 text-left text-sm font-medium text-gray-500">Produuct</th>
+            <th class="px-6 py-3 text-left text-sm font-medium text-gray-500">Quarity</th>
+            <th class="px-6 py-3 text-left text-sm font-medium text-gray-500">Total Price</th>
+          </thead>
+          <tbody>
+            {% for item in cart.items %}
+              <tr class="table-row">
+                <td class="py-4 px-2 flex flex-col justify-center">
+                  <a href="{{ item.url }}">
+                    {% if item.image %}
+                      <img
+                        src="{{ item.image | image_url: width: 80 }}"
+                        alt="{{ item.title }}"
+                        width="80"
+                        height="80"
+                        class="object-cover"
+                      >
+                    {% else %}
+                      {{ 'product-1' | placeholder_svg_tag: 'w-20 h-20 object-cover border' }}
+                    {% endif %}
+                  </a>
+                </td>
+                <td class="py-4 px-2 flex flex-col justify-center">
+                  <a href="{{ item.url }}" class="my-1">{{ item.product.title | truncatewords: 5 }}</a>
+                  <span class="text-sm text-gray-500 my-1">{{ item.variant.title }}</span>
+                  <!-- ?line={{ forloop.index }}:  カート内のアイテムの位置（index番目）を指定 -->
+                  <a
+                    href="{{ routes.cart_change_url }}?line={{ forloop.index }}&quantity=0"
+                    class="text-sm font-medium text-red-500 my-1"
+                    >remove</a
+                  >
+                </td>
+                <td class="py-4 px-2">
+                  <!-- name="updates[]": Shopifyが updates[] を認識して、カート内の各アイテムの数量を自動的に更新 -->
+                  <input
+                    type="number"
+                    name="updates[]"
+                    value="{{ item.quantity }}"
+                    min="1"
+                    id="updates_{{ forloop.index }}"
+                    @change="updateCart($event.target.value, {{ forloop.index }}, {{ item.variant.id }})"
+                    class="w-20 border p-2"
+                  >
+                </td>
+                <td class="py-4 px-2">
+                  <span x-ref="linePrice{{ forloop.index }}">{{ item.line_price | money }}</span>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+        <div class="flex flex-col items-center justify-between md:flex-row">
+          <div class="w-full my-4">
+            <div class="flex flex-col items-start">
+              <label for="cart_note" class="my-1">Cart notes</label>
+              <textarea name="note" id="cart_note" class="w-full resize-none border h-20 md:max-w-lg"></textarea>
+            </div>
+          </div>
+          <div class="w-full my-4 md:w-80">
+            {% for block in section.blocks %}
+              {% case block.type %}
+                {% when 'subtotal' %}
+                  <h3 class="text-xl">
+                    Subtotal: <span x-text="subtotal">{{ cart.total_price | money }}</span>
+                  </h3>
+
+                {% when 'checkout_button' %}
+                  <div class="my-2">
+                    <button
+                      type="submit"
+                      name="checkout"
+                      class="w-full p-3 border border-gray-600 bg-gray-600 font-medium text-white cursor-pointer"
+                    >
+                      Checkout
+                    </button>
+                  </div>
+                {% else %}
+
+              {% endcase %}
+            {% endfor %}
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+{% else %}
+  <div class="max-w-6xl h-60 my-4 flex items-cemter justify-center mx-auto">
+    <div class="text-center">
+      <h1 class="text-3xl my-4">Your cart is empty</h1>
+      <div class="my-4 py-4">
+        <a
+          href="{{ routes.all_products_collection_url }}"
+          class="border boreder-gray-600 text-white bg-gray-600 px-8 py-3"
+          >Continue Shopping</a
+        >
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Template Cart",
+  "blocks": [
+    {
+      "type": "subtotal",
+      "name": "subtotal",
+      "limit": 1
+    },
+
+    {
+      "type": "checkout_button",
+      "name": "Checkout Button",
+      "limit": 1
+    }
+  ],
+  "settings": []
+}
+{% endschema %}
+
+<script>
+  function cart() {
+    return {
+      subtotal: '{{ cart.total_price | money }}',
+
+      updateCart(quantity, line, variantId) {
+        const qty = parseInt(quantity);
+
+        if (qty < 1) {
+          return;
+        }
+
+        // Shopify Cart API を使用してカートを更新
+        // https://shopify.dev/docs/api/ajax/reference/cart
+        fetch('/cart/change.js', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            line: line,
+            quantity: qty,
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            // 各アイテムの価格を更新
+            const item = data.items.find((item) => item.id === variantId);
+            if (item) {
+              const linePriceRef = this.$refs['linePrice' + line];
+              if (linePriceRef) {
+                linePriceRef.textContent = this.formatMoney(item.line_price);
+              }
+            }
+
+            // 合計金額を更新
+            this.subtotal = this.formatMoney(data.total_price);
+          })
+          .catch((error) => {
+            console.error('Error updating cart:', error);
+            alert('An error occurred while updating the cart. Please reload the page.');
+          });
+      },
+
+      formatMoney(cents) {
+        return '¥' + (cents / 100).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      },
+    };
+  }
+</script>

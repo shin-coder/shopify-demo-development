@@ -1,20 +1,20 @@
 # Shopify Demo Development
 
-Shopifyのカスタムテーマ開発プロジェクト
+Shopify のカスタムテーマ開発プロジェクト
 
-## 🚀技術スタック
+## 🚀 技術スタック
 
-- **[Shopify](https://www.shopify.com/)** - ECプラットフォーム
-- **[Tailwind CSS](https://tailwindcss.com/)** - ユーティリティファーストCSSフレームワーク
-- **[Alpine.js](https://alpinejs.dev/)** - 軽量JavaScriptフレームワーク
+- **[Shopify](https://www.shopify.com/)** - EC プラットフォーム
+- **[Tailwind CSS](https://tailwindcss.com/)** - ユーティリティファースト CSS フレームワーク
+- **[Alpine.js](https://alpinejs.dev/)** - 軽量 JavaScript フレームワーク
 
-## ⚙️セットアップ
+## ⚙️ セットアップ
 
 ### 前提条件
 
 - Node.js (npm)
 - Shopify CLI
-- Shopifyストアへのアクセス権限
+- Shopify ストアへのアクセス権限
 
 ### プロジェクトの立ち上げ
 
@@ -39,23 +39,24 @@ npm run dev
 ```
 
 このコマンドは以下を同時に実行します:
-- Tailwind CSSのwatchモード（`src/tailwind.css` → `assets/application.css`）
-- Shopifyの開発サーバー（ローカルプレビュー）
 
-開発用のプレビューURLがターミナルに表示されます。
+- Tailwind CSS の watch モード（`src/tailwind.css` → `assets/application.css`）
+- Shopify の開発サーバー（ローカルプレビュー）
 
-## 💻利用可能なコマンド
+開発用のプレビュー URL がターミナルに表示されます。
 
-| コマンド | 説明 |
-|---------|------|
-| `npm run dev` | 開発サーバーを起動（Tailwind watch + Shopify dev） |
-| `npm run build` | TailwindのCSSをビルド（本番用） |
-| `npm run tailwind:watch` | Tailwind CSSのみをwatchモードで実行 |
-| `npm run shopify:dev` | Shopifyの開発サーバーのみを起動 |
+## 💻 利用可能なコマンド
 
-## 🔥デプロイ
+| コマンド                 | 説明                                               |
+| ------------------------ | -------------------------------------------------- |
+| `npm run dev`            | 開発サーバーを起動（Tailwind watch + Shopify dev） |
+| `npm run build`          | Tailwind の CSS をビルド（本番用）                 |
+| `npm run tailwind:watch` | Tailwind CSS のみを watch モードで実行             |
+| `npm run shopify:dev`    | Shopify の開発サーバーのみを起動                   |
 
-テーマファイルをShopifyストアにアップロードする:
+## 🔥 デプロイ
+
+テーマファイルを Shopify ストアにアップロードする:
 
 ```sh
 shopify theme push
@@ -67,20 +68,22 @@ shopify theme push
 shopify theme push --theme [THEME_ID]
 ```
 
-## 🌏多言語対応（Locales）
+## 🌏 多言語対応（Locales）
 
 ### ロケールファイルの設定
 
-翻訳テキストは `locales/` ディレクトリのJSONファイルで管理します。
+翻訳テキストは `locales/` ディレクトリの JSON ファイルで管理します。
 
 **ファイル構成例:**
+
 ```
 locales/
 ├── en.default.json  # 英語（デフォルト・必須）
 └── ja.json          # 日本語（必要な場合のみ追加）
 ```
 
-**JSONの構造例** (`locales/en.default.json`):
+**JSON の構造例** (`locales/en.default.json`):
+
 ```json
 {
   "general": {
@@ -94,7 +97,7 @@ locales/
 
 日本語対応が必要な場合は、同じ構造で `locales/ja.json` を作成します。
 
-### Liquidテンプレートでの使用方法
+### Liquid テンプレートでの使用方法
 
 ロケールキーを参照するには `t` フィルターを使用します:
 
@@ -103,6 +106,7 @@ locales/
 ```
 
 **変数を含む翻訳:**
+
 ```json
 {
   "general": {
@@ -116,6 +120,7 @@ locales/
 ```
 
 **複数形対応:**
+
 ```json
 {
   "cart": {
@@ -131,13 +136,13 @@ locales/
 {{ 'cart.item_count' | t: count: cart.item_count }}
 ```
 
-## 📁テンプレートファイル（JSON）でのページ作成
+## 📁 テンプレートファイル（JSON）でのページ作成
 
-Shopify 2.0では、JSONテンプレートを使用してページを構築します。
+Shopify 2.0 では、JSON テンプレートを使用してページを構築します。
 
-### JSONテンプレートの基本構造
+### JSON テンプレートの基本構造
 
-`templates/` フォルダにJSONファイルを作成します:
+`templates/` フォルダに JSON ファイルを作成します:
 
 ```json
 {
@@ -155,7 +160,8 @@ Shopify 2.0では、JSONテンプレートを使用してページを構築し�
 ```
 
 **各プロパティの説明:**
-- `name`: テンプレートの表示名（Shopify管理画面で表示される）
+
+- `name`: テンプレートの表示名（Shopify 管理画面で表示される）
 - `sections`: 使用するセクションを定義
 - `type`: `sections/` フォルダ内のファイル名（拡張子なし）
   - 例: `"type": "about-section"` → `sections/about-section.liquid`
@@ -164,15 +170,15 @@ Shopify 2.0では、JSONテンプレートを使用してページを構築し�
 ### 使い方
 
 1. `sections/` フォルダにセクションファイル（`.liquid`）を作成
-2. `templates/` にJSONファイルを作成して、`type` でセクションを指定
-3. Shopify管理画面でページ作成時にこのテンプレートを選択
+2. `templates/` に JSON ファイルを作成して、`type` でセクションを指定
+3. Shopify 管理画面でページ作成時にこのテンプレートを選択
 
-## リソース
+## 🗒️ リソース
 
-- **SVGアイコン**: [Heroicons](https://heroicons.com/)を使用
+- **SVG アイコン**: [Heroicons](https://heroicons.com/)を使用
 - **多言語対応**: [Shopify Theme Translation](https://shopify.dev/docs/themes/architecture/locales)
 
-## プロジェクト構成
+## 🎯 プロジェクト構成
 
 ```
 .
@@ -186,7 +192,7 @@ Shopify 2.0では、JSONテンプレートを使用してページを構築し�
 └── templates/        # ページテンプレート
 ```
 
-## 注意事項
+## ⚠️ 注意事項
 
-- 開発時は必ず `npm run dev` を使用してください（Tailwind CSSの自動コンパイルのため）
+- 開発時は必ず `npm run dev` を使用してください（Tailwind CSS の自動コンパイルのため）
 - 本番環境へのプッシュ前に `npm run build` を実行することを推奨します
