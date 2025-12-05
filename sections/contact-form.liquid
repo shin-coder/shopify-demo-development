@@ -1,0 +1,77 @@
+<div class="flex flex-col items-center my-8">
+  {% if section.settings.title != blank %}
+    <h1 class="text-3xl font-medium my-8 md:my-16">{{ section.settings.title }}</h1>
+  {% endif %}
+
+  {% form 'contact' %}
+    {% if form.errors %}
+      <div class="border p-5">
+        <div class="flexflex-row items-center w-full my-3">
+          <div class="text-red-500">
+            {% render 'icon-failed' %}
+          </div>
+          <div class="text-sm font-medium ml-3">Oh no! Your message is not sent</div>
+        </div>
+        <ul class="px-4 mb-3 ml-7 list-decimal">
+          {% for error in form.errors %}
+            <li>
+              <span>{{ form.errors.messages[error] }}</span>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+
+    <div class="max-w-6xl mx-auto flex-1 justify-center items-center px-4">
+      <div class="flex px-1 mb-3">
+        <div class="px-3 md:w-1/2">
+          <label for="contact_name" class="uppercase text-xs text-gray-500 font-medium">Name</label>
+          <input type="text" name="contact[name]" id="contanct_name" class="border py-3 px-4 text-gray-700 w-full">
+        </div>
+        <div class="px-3 md:w-1/2">
+          <label for="contact_email" class="uppercase text-xs text-gray-500 font-medium">Email adress</label>
+          <input type="email" name="contact[email]" id="contact_email" class="border py-3 px-4 text-gray-700 w-full">
+        </div>
+      </div>
+
+      <div class="flex px-1 mb-3">
+        <div class="w-full px-3">
+          <label for="contact_message" class="uppercase text-xs text-gray-500 font-medium">Message</label>
+          <textarea
+            name="contanct[body]"
+            id="contact_message"
+            class="border py-3 px-4 mb-3 text-gray-700 w-full"
+          ></textarea>
+        </div>
+      </div>
+
+      <div class="felx px-1 mb-3">
+        <div class="w-full px-3">
+          <input
+            type="submit"
+            class="w-full cursor-pointer px-4 py-2 border text-base font-medium bg-gray-900 text-white hover:bg-gray-700"
+            value="Submit message"
+          >
+        </div>
+      </div>
+    </div>
+  {% endform %}
+</div>
+
+{% schema %}
+{
+  "name": "Contact From",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Ttile"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Contact Form"
+    }
+  ]
+}
+{% endschema %}
