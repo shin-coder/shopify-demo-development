@@ -12,9 +12,17 @@
     "template": {
       "type": "template-page",
       "settings": {}
+    },
+    "contact_form_z937Ka": {
+      "type": "contact-form",
+      "name": "Contact Form",
+      "settings": {
+        "title": ""
+      }
     }
   },
   "order": [
-    "template"
+    "template",
+    "contact_form_z937Ka"
   ]
 }
