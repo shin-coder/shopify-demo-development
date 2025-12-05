@@ -1,0 +1,25 @@
+{% if section.settings.title != blank %}
+  <h1 class="text-3xl font-medium my-8 md:my-16">{{ section.settings.title }}</h1>
+{% endif %}
+
+<div>
+  <p>About description</p>
+</div>
+
+{% schema %}
+{
+  "name": "About Content",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title"
+    }
+  ],
+  "presets": [
+    {
+      "name": "About Content"
+    }
+  ]
+}
+{% endschema %}

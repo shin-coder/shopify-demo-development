@@ -13,16 +13,9 @@
       "type": "template-page",
       "settings": {}
     },
-    "contact_form_z937Ka": {
-      "type": "contact-form",
-      "name": "Contact Form",
-      "settings": {
-        "title": ""
-      }
+    "about-content": {
+      "type": "about-content"
     }
   },
-  "order": [
-    "template",
-    "contact_form_z937Ka"
-  ]
+  "order": ["template", "about-content"]
 }
