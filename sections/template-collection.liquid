@@ -1,6 +1,9 @@
 <div class="px-4 py-8">
+  <a href="{{ routes.collections_url }}" class="text-basse text-gray-500 hover:underline text-center block my-4"
+    >Go back to collection</a
+  >
   {% paginate collection.products by section.settings.number_of_products_per_page %}
-    <h1 class="text-3xl text-center">{{ section.settings.collection_title }}</h1>
+    <h1 class="text-3xl text-center">{{ collection.title }}</h1>
 
     <div class="max-w-6xl mx-auto">
       <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
@@ -25,12 +28,6 @@
       "id": "number_of_products_per_page",
       "default": 6,
       "label": "Number of products per page"
-    },
-    {
-      "type": "text",
-      "id": "collection_title",
-      "default": "Product Collection",
-      "label": "Collection Title"
     }
   ]
 }

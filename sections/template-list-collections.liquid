@@ -1,0 +1,51 @@
+<div class="flex flex-col items-center my-8">
+  <h1 class="text-4xl font-medium">{{ section.settings.title }}</h1>
+  <div class="max-w-6xl mx-auto my-3">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+      {% for collection in collections %}
+        {% if collection.all_products_count > 0 %}
+          <div class="w-full py-6 px-3">
+            <div class="border bg-white overflow-hidden">
+              <a href="{{ collection.url }}">
+                <div class="h-88 overflow-hidden">
+                  {% if collection.featured_image != blank %}
+                    <img
+                      src="{{ collection.featured_image | image_url: width: 400 }}"
+                      width="400"
+                      height="400"
+                      alt="{{ collection.title | escape }}"
+                      class="w-full h-full object-cover transition duration-500 esae-in-out transform hover:scale-105"
+                    >
+                  {% else %}
+                    {{
+                      'collection-1'
+                      | placeholder_svg_tag: 'w-full h-full object-cover transition duration-500 esae-in-out transform hover:scale-105'
+                    }}
+                  {% endif %}
+                </div>
+              </a>
+
+              <div class="p-4 bg-gray-100">
+                <p class="text-xl">{{ collection.title }}</p>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Template List Collection",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "default": "Collection",
+      "label": "Ttile"
+    }
+  ]
+}
+{% endschema %}
