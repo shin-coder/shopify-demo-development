@@ -34,7 +34,11 @@
         "description",
         "checkout_buttons"
       ]
+    },
+    "contact-form": {
+      "type": "contact-form",
+      "settings": {}
     }
   },
-  "order": ["template"]
+  "order": ["template", "contact-form"]
 }
