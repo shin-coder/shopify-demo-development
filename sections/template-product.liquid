@@ -184,6 +184,49 @@
         });
       });
     }
+
+    // カートへの追加をAjaxで処理
+    const productForm = document.querySelector('form[action*="/cart/add"]');
+    if (productForm) {
+      productForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const formData = new FormData(this);
+        const submitButton = this.querySelector('button[type="submit"]');
+        const originalText = submitButton.textContent;
+
+        // ボタンを無効化
+        submitButton.disabled = true;
+        submitButton.textContent = '追加中...';
+
+        fetch('/cart/add.js', {
+          method: 'POST',
+          body: formData,
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            // ボタンを元に戻す
+            submitButton.disabled = false;
+            submitButton.textContent = originalText;
+
+            // ドロワーを開く
+            window.dispatchEvent(new CustomEvent('cart-drawer-open'));
+
+            // カートアイコンの数を更新（ヘッダーにカートアイコンがある場合）
+            fetch('/cart.js')
+              .then((response) => response.json())
+              .then((cart) => {
+                window.dispatchEvent(new CustomEvent('cart-updated', { detail: { count: cart.item_count } }));
+              });
+          })
+          .catch((error) => {
+            console.error('Error adding to cart:', error);
+            alert('カートへの追加中にエラーが発生しました。');
+            submitButton.disabled = false;
+            submitButton.textContent = originalText;
+          });
+      });
+    }
   });
 </script>
 

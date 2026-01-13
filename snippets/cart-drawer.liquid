@@ -1,0 +1,211 @@
+<div
+  x-data="cartDrawer()"
+  x-show="isOpen"
+  @cart-drawer-open.window="openDrawer()"
+  x-cloak
+  class="fixed inset-0 z-50"
+  style="display: none;"
+>
+  <!-- オーバーレイ -->
+  <div
+    class="fixed inset-0 bg-black/50 transition-opacity"
+    @click="closeDrawer()"
+    x-show="isOpen"
+    x-transition:enter="transition-opacity ease-linear duration-300"
+    x-transition:enter-start="opacity-0"
+    x-transition:enter-end="opacity-100"
+    x-transition:leave="transition-opacity ease-linear duration-300"
+    x-transition:leave-start="opacity-100"
+    x-transition:leave-end="opacity-0"
+  ></div>
+
+  <!-- ドロワー -->
+  <div
+    class="fixed right-0 top-0 h-full w-full md:w-96 bg-white shadow-xl flex flex-col"
+    x-show="isOpen"
+    x-transition:enter="transform transition ease-in-out duration-300"
+    x-transition:enter-start="translate-x-full"
+    x-transition:enter-end="translate-x-0"
+    x-transition:leave="transform transition ease-in-out duration-300"
+    x-transition:leave-start="translate-x-0"
+    x-transition:leave-end="translate-x-full"
+  >
+    <!-- ヘッダー -->
+    <div class="flex items-center justify-between p-4 border-b">
+      <h2 class="text-lg font-semibold">カート</h2>
+      <button @click="closeDrawer()" class="p-2 hover:bg-gray-100 rounded">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- カート内容 -->
+    <div class="flex-1 overflow-y-auto p-4">
+      <template x-if="cartItems.length === 0">
+        <div class="text-center py-8">
+          <p class="text-gray-500">カートは空です</p>
+        </div>
+      </template>
+
+      <template x-if="cartItems.length > 0">
+        <div class="space-y-4">
+          <template x-for="item in cartItems" :key="item.id">
+            <div class="flex gap-4 border-b pb-4">
+              <!-- 商品画像 -->
+              <div class="shrink-0 w-20 h-20">
+                <img
+                  :src="item.image"
+                  :alt="item.product_title"
+                  width="80"
+                  height="80"
+                  class="w-full h-full object-cover rounded"
+                >
+              </div>
+
+              <!-- 商品情報 -->
+              <div class="flex-1 min-w-0">
+                <h3 class="text-sm font-medium text-gray-900" x-text="item.product_title"></h3>
+                <p class="text-sm text-gray-500" x-text="item.variant_title"></p>
+                <p class="text-sm font-medium mt-1" x-text="formatMoney(item.line_price)"></p>
+
+                <!-- 数量と削除 -->
+                <div class="flex items-center gap-2 mt-2">
+                  <input
+                    type="number"
+                    :value="item.quantity"
+                    min="1"
+                    @change="updateQuantity(item.key, $event.target.value)"
+                    class="w-16 border border-gray-300 rounded px-2 py-1 text-sm"
+                  >
+                  <button
+                    @click="removeItem(item.key)"
+                    class="text-sm text-red-500 hover:text-red-700"
+                  >
+                    削除
+                  </button>
+                </div>
+              </div>
+            </div>
+          </template>
+        </div>
+      </template>
+    </div>
+
+    <!-- フッター -->
+    <div class="border-t p-4 space-y-4" x-show="cartItems.length > 0">
+      <div class="flex items-center justify-between text-lg font-semibold">
+        <span>合計</span>
+        <span x-text="formatMoney(totalPrice)"></span>
+      </div>
+      <a
+        href="{{ routes.cart_url }}"
+        class="block w-full text-center bg-gray-900 text-white py-3 rounded hover:bg-gray-700 transition"
+      >
+        カートを見る
+      </a>
+      <button
+        @click="checkout()"
+        class="block w-full text-center border border-gray-900 text-gray-900 py-3 rounded hover:bg-gray-50 transition"
+      >
+        チェックアウト
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  function cartDrawer() {
+    return {
+      isOpen: false,
+      cartItems: [],
+      totalPrice: 0,
+
+      openDrawer() {
+        this.isOpen = true;
+        this.fetchCart();
+      },
+
+      closeDrawer() {
+        this.isOpen = false;
+      },
+
+      // https://shopify.dev/docs/api/ajax/reference/cart
+
+      fetchCart() {
+        fetch('/cart.js')
+          .then((response) => response.json())
+          .then((cart) => {
+            this.cartItems = cart.items;
+            this.totalPrice = cart.total_price;
+          })
+          .catch((error) => {
+            console.error('Error fetching cart:', error);
+          });
+      },
+
+      updateQuantity(key, quantity) {
+        const qty = parseInt(quantity);
+        if (qty < 1) return;
+
+        fetch('/cart/change.js', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            id: key,
+            quantity: qty,
+          }),
+        })
+          .then((response) => response.json())
+          .then((cart) => {
+            this.cartItems = cart.items;
+            this.totalPrice = cart.total_price;
+            // カートアイコンの数を更新
+            window.dispatchEvent(new CustomEvent('cart-updated', { detail: { count: cart.item_count } }));
+          })
+          .catch((error) => {
+            console.error('Error updating cart:', error);
+          });
+      },
+
+      removeItem(key) {
+        fetch('/cart/change.js', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            id: key,
+            quantity: 0,
+          }),
+        })
+          .then((response) => response.json())
+          .then((cart) => {
+            this.cartItems = cart.items;
+            this.totalPrice = cart.total_price;
+            // カートアイコンの数を更新
+            window.dispatchEvent(new CustomEvent('cart-updated', { detail: { count: cart.item_count } }));
+          })
+          .catch((error) => {
+            console.error('Error removing item:', error);
+          });
+      },
+
+      checkout() {
+        window.location.href = '/checkout';
+      },
+
+      formatMoney(cents) {
+        return '¥' + (cents / 100).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      },
+    };
+  }
+</script>
+
+<style>
+  [x-cloak] {
+    display: none !important;
+  }
+</style>
