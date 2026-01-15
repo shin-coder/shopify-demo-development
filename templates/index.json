@@ -17,7 +17,7 @@
         "number_of_production_to_show": 4
       }
     },
-    "contact_form_9yKmAY": {
+    "contact_form": {
       "type": "contact-form",
       "name": "Contact Form",
       "settings": {
@@ -25,8 +25,5 @@
       }
     }
   },
-  "order": [
-    "featured-collection",
-    "contact_form_9yKmAY"
-  ]
+  "order": ["featured-collection", "contact_form"]
 }
