@@ -9,7 +9,17 @@
  */
 {
   "current": {
-    "color_primary_black": "#111"
+    "color_primary_black": "#111",
+    "sections": {
+      "header": {
+        "type": "header",
+        "settings": {
+          "mobile_menu_title": "Menu",
+          "menu": "main-menu"
+        }
+      }
+    },
+    "content_for_index": []
   },
   "presets": {
     "Default": {}
