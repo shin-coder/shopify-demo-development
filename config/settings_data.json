@@ -8,10 +8,10 @@
  * ------------------------------------------------------------
  */
 {
-  "current": {
-    "color_primary_black": "#111"
-  },
+  "current": "Default",
   "presets": {
-    "Default": {}
+    "Default": {
+      "color_primary_black": "#111"
+    }
   }
 }
