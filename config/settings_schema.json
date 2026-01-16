@@ -8,12 +8,23 @@
     "theme_support_url": "https://github.com/Shopify/themekit/issues"
   },
   {
-    "name": "Colors",
+    "name": "Favicon",
     "settings": [
       {
-        "type": "color",
-        "id": "color_primary_black",
-        "label": "Primary black color"
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "Favicon image",
+        "info": "32x32pxのPNG画像を推奨"
+      }
+    ]
+  },
+  {
+    "name": "Social media",
+    "settings": [
+      {
+        "type": "url",
+        "id": "social_twitter_link",
+        "label": "Twitter / X link"
       }
     ]
   }
